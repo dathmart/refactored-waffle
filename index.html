@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style type="text/css">
+    table {
+      width: 100%;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color:#f4bcf4;
+    }
+
+    tbody tr:first-of-type {
+      color:green;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="container">
+    <!--
+    <table border="10">
+      <thead>
+        <tr>
+          <th colspan="2">Name, Age!</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Captain Dicknips!</td>
+          <td>32</td>
+        </tr>
+      </tbody>
+    </table>
+    <input value="fuck" />
+  -->
+  </div>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript">
+    $(document).ready(() => {
+      //window.alert('whee!');
+      //console.log('yeeeeaaaaa');
+      //console.error('wwwaaaat');
+
+      var $container = $('#container');
+
+      //debugger;
+
+      const $table = $("<table></table>");
+      const $thead = $("<thead></thead>");
+      const $trHead = $("<tr></tr>");
+      const $th = $("<th></th>")
+
+      $table.attr("border", 2);
+      $table.append($thead);
+      $thead.append($trHead);
+      $trHead.append($th);
+      $th.text("Name, Age");
+      $th.attr("colspan", 2);
+
+      const $tbody = $("<tbody></tbody>");
+      $table.append($tbody);
+      const data = [
+        { "name": "Captain Ginyu", "age": 32 },
+        { "name": "Lieutenant DickandBalls", "age": 42 },
+        { "name": "Sweet Dee", "age": 35 }
+      ];
+
+      for (i = 0; i < data.length; i++) {
+        const datum = data[i];
+        console.log(datum.name);
+
+        // if the name contains 'D' or age is even, print
+        // else, continue
+        //if (!(datum.name.includes("D") || datum.age % 2 == 0)) continue;
+
+        const $tr = $("<tr></tr>");
+        $tbody.append($tr);
+        $tr.append("<td>" + datum.name + "</td>");
+        $tr.append("<td>" + datum.age + "</td>");
+      }
+
+      $container.append($table);
+    });
+  </script>
+</body>
+
+</html>
