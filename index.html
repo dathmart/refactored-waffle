@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Refactored Waffle!!</title>
   <style type="text/css">
     table {
       width: 100%;
     }
-
+    
     tbody tr:nth-child(odd) {
-      background-color:#f4bcf4;
+      background-color: #f4bcf4;
     }
-
+    
     tbody tr:first-of-type {
-      color:green;
+      color: green;
     }
   </style>
 </head>
+
 <body>
-  <div id="container" />
+  <div id="container">
+    <input type="text" id="search" />
+  </div>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript">
     $(document).ready(() => {
@@ -43,25 +47,38 @@
 
       const $tbody = $("<tbody></tbody>");
       $table.append($tbody);
-      const data = [
-        { "name": "Captain Ginyu", "age": 32 },
-        { "name": "Lieutenant DickandBalls", "age": 42 },
-        { "name": "Sweet Dee", "age": 35 }
-      ];
 
-      for (i = 0; i < data.length; i++) {
-        const datum = data[i];
-        console.log(datum.name);
+      var boo = function () {
+        window.alert('boo!');
+      };
 
-        // if the name contains 'D' or age is even, print
-        // else, continue
-        //if (!(datum.name.includes("D") || datum.age % 2 == 0)) continue;
+      setTimeout(function () {
+      }, 2000);
 
-        const $tr = $("<tr></tr>");
-        $tbody.append($tr);
-        $tr.append("<td>" + datum.name + "</td>");
-        $tr.append("<td>" + datum.age + "</td>");
+      const $search = $("#search");
+      $search.focus();
+      $search.blur(function () {
+        const search = $search.val();
+        $tbody.empty();
+
+        get("http://localhost:8000/data?search=" + search);
+      });
+      var get = function (url) {
+
+        $.get(url, function (data) {
+
+          for (i = 0; i < data.length; i++) {
+            const datum = data[i];
+            console.log(datum.name);
+
+            const $tr = $("<tr></tr>");
+            $tbody.append($tr);
+            $tr.append("<td>" + datum.name + "</td>");
+            $tr.append("<td>" + datum.age + "</td>");
+          }
+        });
       }
+      get("http://localhost:8000/data");
 
       $container.append($table);
     });
