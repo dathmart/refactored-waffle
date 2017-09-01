@@ -7,37 +7,46 @@
     table {
       width: 100%;
     }
-    
+
     tbody tr:nth-child(odd) {
       background-color: #f4bcf4;
     }
-    
+
     tbody tr:first-of-type {
       color: green;
     }
   </style>
 </head>
+<!-- <link rel="stylesheet" type="text/css" href="mondoSurf.css"> -->
 
 <body>
   <div id="container">
     <input type="text" id="search" />
+    <button class="county_name">County Name</button>
+    <button class="latitude">Latitude</button>
+    <button class="longitude">Longitude</button>
+    <button class="spot_id">Spot ID</button>
+    <button class="spot_name">Break</button>
   </div>
+
   <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript">
     $(document).ready(() => {
-      //window.alert('whee!');
-      //console.log('yeeeeaaaaa');
-      //console.error('wwwaaaat');
 
       var $container = $('#container');
 
-      //debugger;
+      let $county = $('.county_name');
+      let $lat = $('.latitude');
+      let $long = $('.longitude');
+      let $spotId = $('.spot_id');
+      let $break = $('.spot_name');
+
 
       const $table = $("<table></table>");
       const $thead = $("<thead></thead>");
       const $trHead = $("<tr></tr>");
       const $th = $("<th></th>")
-    
+
 
       $table.attr("border", 2);
       $table.append($thead);
@@ -60,6 +69,9 @@
       $search.focus();
       $search.blur(function () {
         const search = $search.val();
+        if (!search) {
+          return;
+        }
         $tbody.empty();
 
         get("http://localhost:8000/data?search=" + search);
@@ -68,23 +80,64 @@
 
         $.get(url, function (data) {
 
-          for (i = 0; i < data.length; i++) {
-            const datum = data[i];
-            console.log(datum.name);
+          var renderTableRows = () => {
 
-            const $tr = $("<tr></tr>");
-            $tbody.append($tr);
-<<<<<<< HEAD
-            $tr.append("<td>" + datum.countyName + "</td>");
-            $tr.append("<td>" + datum.latitude + "</td>");
-            $tr.append("<td>" + datum.longitude + "</td>");
-            $tr.append("<td>" + datum.spot_id + "</td>");
-            $tr.append("<td>" + datum.spot_name + "</td>");
-=======
-            $tr.append("<td>" + datum.name + "</td>");
-            $tr.append("<td>" + datum.age + "</td>");
->>>>>>> 71a17cfa59506a370f63e44cf3980b0a9e2d20f6
+            $tbody.empty();
+
+            for (i = 0; i < data.length; i++) {
+              const datum = data[i];
+              console.log(datum.name);
+
+              const $tr = $("<tr></tr>");
+              $tbody.append($tr);
+              $tr.append("<td>" + datum.county_name + "</td>");
+              $tr.append("<td>" + datum.latitude + "</td>");
+              $tr.append("<td>" + datum.longitude + "</td>");
+              $tr.append("<td>" + datum.spot_id + "</td>");
+              $tr.append("<td>" + datum.spot_name + "</td>");
+            }
+
           }
+
+          renderTableRows();
+
+          let clickState = false;
+
+          $county.click(() => {
+
+            if (clickState == false) {
+              clickState = true;
+              console.log("clicked");
+
+            } else if (clickState == true) {
+              clickState = false;
+              console.log("unclicked");
+
+            }
+
+            function compare(c, d) {
+              let comparison = 0;
+
+              if (c.county_name > d.county_name) {
+                comparison = 1;
+              } else if (c.county_name < d.county_name) {
+                comparison = -1;
+              }
+              // console.log(c.county_name, d.county_name, comparison);
+
+              if (clickState == true) {
+                return comparison;
+              } else {
+                return comparison * -1;
+              }
+            }
+
+            data.sort(compare);
+
+            renderTableRows();
+
+          });
+
         });
       }
       get("http://localhost:8000/data");
