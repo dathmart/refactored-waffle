@@ -1,0 +1,24 @@
+{
+  "name": "refactored-waffle",
+  "version": "1.0.0",
+  "description": "learning stuff about all the things",
+  "main": "server.js",
+  "dependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dathmart/refactored-waffle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dathmart/refactored-waffle/issues"
+  },
+  "homepage": "https://github.com/dathmart/refactored-waffle#readme"
+}
