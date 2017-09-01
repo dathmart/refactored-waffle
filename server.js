@@ -2,7 +2,11 @@ var http = require('http');
 var fs = require('fs');
 
 var server = http.createServer(function (req, res) {
+<<<<<<< HEAD
 
+=======
+  console.log('req.url', req.url);
+>>>>>>> 71a17cfa59506a370f63e44cf3980b0a9e2d20f6
   if (req.url == '/' || req.url == '/index.html') {
     fs.readFile('./index.html', function (err, html) {
       if (err) {
@@ -21,6 +25,7 @@ var server = http.createServer(function (req, res) {
       "Content-Type": "application/json",
     });
 
+<<<<<<< HEAD
     http.get({
       host: "www.spitcast.com",
       path: "/api/spot/all"
@@ -40,6 +45,13 @@ var server = http.createServer(function (req, res) {
 
     return;
     //
+=======
+    const data = [
+      { "name": "Captain Ginyu", "age": 32 },
+      { "name": "Lieutenant DickandBalls", "age": 42 },
+      { "name": "Sweet Dee", "age": 35 }
+    ];
+>>>>>>> 71a17cfa59506a370f63e44cf3980b0a9e2d20f6
     const parts = req.url.split("?");
     console.log('parts', parts);
     if (parts.length > 1) {
@@ -57,12 +69,21 @@ var server = http.createServer(function (req, res) {
     } else {
       res.write(JSON.stringify(data));
     }
+<<<<<<< HEAD
     res.end();
   }
   else {
     res.writeHeader(404);
     res.end();
   }
+=======
+    res.end();
+  }
+  else {
+    res.writeHeader(404);
+    res.end();
+  }
+>>>>>>> 71a17cfa59506a370f63e44cf3980b0a9e2d20f6
 });
 
 server.listen(8000);
