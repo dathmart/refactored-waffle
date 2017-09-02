@@ -24,7 +24,7 @@ var server = http.createServer(function (req, res) {
     });
 
     http.get({
-      host: "www.spitcast.com",
+      host: "api.spitcast.com",
       path: "/api/spot/all"
     }, (response) => {
       var body = '';
