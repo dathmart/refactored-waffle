@@ -3,145 +3,51 @@
 
 <head>
   <title>Refactored Waffle!!</title>
+  <meta charset="UTF-8">
+  <!--Why does this css link not style the page correctly given the same parameters? -->
+  <!-- <link rel="stylesheet" type="text/css" href="mondoSurf.css" /> -->
   <style type="text/css">
+    body  {
+    
+      background-color:lightskyblue;
+
+    }
     table {
       width: 100%;
     }
 
     tbody tr:nth-child(odd) {
-      background-color: #f4bcf4;
+      background-color: aqua;
     }
 
     tbody tr:first-of-type {
-      color: green;
+      color: crimson;
     }
   </style>
 </head>
-<!-- <link rel="stylesheet" type="text/css" href="mondoSurf.css"> -->
 
 <body>
+  <div id="forecast">
+
+  </div>
   <div id="container">
     <input type="text" id="search" />
-    <button class="county_name">County Name</button>
-    <button class="latitude">Latitude</button>
-    <button class="longitude">Longitude</button>
-    <button class="spot_id">Spot ID</button>
-    <button class="spot_name">Break</button>
+    <button id="county_name">County</button>
+    <button id="latitude">Latitude</button>
+    <button id="longitude">Longitude</button>
+    <button id="spot_id">Spot ID</button>
+    <button id="spot_name">Break</button>
   </div>
 
   <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="mondoSurf.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(document).ready(() => {
 
+      getTableData("http://localhost:8000/data");
       var $container = $('#container');
-
-      let $county = $('.county_name');
-      let $lat = $('.latitude');
-      let $long = $('.longitude');
-      let $spotId = $('.spot_id');
-      let $break = $('.spot_name');
-
-
-      const $table = $("<table></table>");
-      const $thead = $("<thead></thead>");
-      const $trHead = $("<tr></tr>");
-      const $th = $("<th></th>")
-
-
-      $table.attr("border", 2);
-      $table.append($thead);
-      $thead.append($trHead);
-      $trHead.append($th);
-      $th.text("County, Latitude, Longitude, Spot ID, Break");
-      $th.attr("colspan", 5);
-
-      const $tbody = $("<tbody></tbody>");
-      $table.append($tbody);
-
-      var boo = function () {
-        window.alert('boo!');
-      };
-
-      setTimeout(function () {
-      }, 2000);
-
-      const $search = $("#search");
-      $search.focus();
-      $search.blur(function () {
-        const search = $search.val();
-        if (!search) {
-          return;
-        }
-        $tbody.empty();
-
-        get("http://localhost:8000/data?search=" + search);
-      });
-      var get = function (url) {
-
-        $.get(url, function (data) {
-
-          var renderTableRows = () => {
-
-            $tbody.empty();
-
-            for (i = 0; i < data.length; i++) {
-              const datum = data[i];
-              console.log(datum.name);
-
-              const $tr = $("<tr></tr>");
-              $tbody.append($tr);
-              $tr.append("<td>" + datum.county_name + "</td>");
-              $tr.append("<td>" + datum.latitude + "</td>");
-              $tr.append("<td>" + datum.longitude + "</td>");
-              $tr.append("<td>" + datum.spot_id + "</td>");
-              $tr.append("<td>" + datum.spot_name + "</td>");
-            }
-
-          }
-
-          renderTableRows();
-
-          let clickState = false;
-
-          $county.click(() => {
-
-            if (clickState == false) {
-              clickState = true;
-              console.log("clicked");
-
-            } else if (clickState == true) {
-              clickState = false;
-              console.log("unclicked");
-
-            }
-
-            function compare(c, d) {
-              let comparison = 0;
-
-              if (c.county_name > d.county_name) {
-                comparison = 1;
-              } else if (c.county_name < d.county_name) {
-                comparison = -1;
-              }
-              // console.log(c.county_name, d.county_name, comparison);
-
-              if (clickState == true) {
-                return comparison;
-              } else {
-                return comparison * -1;
-              }
-            }
-
-            data.sort(compare);
-
-            renderTableRows();
-
-          });
-
-        });
-      }
-      get("http://localhost:8000/data");
-
+      
+      // $table defined in mondoSurf.js
       $container.append($table);
     });
   </script>

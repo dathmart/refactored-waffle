@@ -5,19 +5,32 @@ var http = require('http');
 var fs = require('fs');
 
 var server = http.createServer(function (req, res) {
-  if (req.url == '/' || req.url == '/index.html') {
-    fs.readFile('./index.html', function (err, html) {
+
+  const foo = (fileName) => {
+    const fileType = ~fileName.indexOf('.js')
+      ? 'javascript'
+      : fileName.substring(fileName.indexOf('.') + 1);
+
+    fs.readFile('./' + fileName, function (err, text) {
       if (err) {
         throw err;
       }
       res.writeHeader(200, {
-        "Content-Type": "text/html",
-        "Content-Length": html.length
+        "Content-Type": "text/" + fileType,
+        "Content-Length": text.length
       });
-      res.write(html);
+      res.write(text);
       res.end();
     });
   }
+
+  if (req.url == '/' || req.url == '/index.html') {
+    foo('index.html');
+  }
+  else if (req.url == '/mondoSurf.js') {
+    foo('mondoSurf.js');
+  }
+
   else if (req.url == "/data" || req.url.startsWith('/data?')) {
     res.writeHeader(200, {
       "Content-Type": "application/json",
