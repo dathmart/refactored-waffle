@@ -22,7 +22,7 @@ const $tbody = $("<tbody></tbody>");
 $table.append($tbody);
 
 const getForecast = (spotId) => {
-    $.get("http://api.spitcast.com/api/spot/forecast/" + spotId, function (data) {
+    $.get(`http://www.spitcast.com/api/spot/forecast/${spotId}/`, function (data) {
         console.log(data);
 
     });
@@ -41,10 +41,10 @@ $search.blur(function () {
     }
     $tbody.empty();
 
-    getTableData("http://localhost:8000/data?search=" + search);
+    getSpots("http://localhost:8000/data?search=" + search);
 });
 
-function getTableData(url) {
+function getSpots(url) {
 
     $.get(url, function (data) {
 
@@ -62,15 +62,13 @@ function getTableData(url) {
                 $tr.append("<td>" + datum.longitude + "</td>");
                 $tr.append($tdSpotId);
 
-                $tdSpotId.append('<a onclick="getForecast(' + datum.spot_id + ')" '
-                    + 'href="#' + datum.spot_id + '">' + datum.spot_id + '</a>');
+                $tdSpotId.append(`<a onclick="getForecast(${datum.spot_id})" href="#${datum.spot_id}">${datum.spot_id}</a>`);
+
                 $tr.append("<td>" + datum.spot_name + "</td>");
 
             }
 
         };
-
-
 
         renderTableRows();
         console.log(event.target.click);
