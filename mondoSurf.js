@@ -4,22 +4,31 @@ let $longitude = $('#longitude');
 let $spotId = $('#spot_id');
 let $break = $('#spot_name');
 
+const $forecastTable = $('<table id="forecast"></table>');
+const $spotsTable = $('<table id="spots"></table>');
 
-const $table = $("<table></table>");
-const $thead = $("<thead></thead>");
-const $trHead = $("<tr></tr>");
-const $th = $("<th></th>")
+$(document).ready(() => {
 
+    $spotsTable.attr("border", 2);
+    const $thead = $("<thead></thead>");
+    $spotsTable.append($thead);
+    const $trHead = $("<tr></tr>");
+    const $th = $("<th></th>");
+    $thead.append($trHead);
+    $trHead.append($th);
+    $th.text("County, Latitude, Longitude, Spot ID, Break");
+    $th.attr("colspan", 5);
+    const $tbody = $('<tbody></tbody>');
+    $spotsTable.append($tbody);
 
-$table.attr("border", 2);
-$table.append($thead);
-$thead.append($trHead);
-$trHead.append($th);
-$th.text("County, Latitude, Longitude, Spot ID, Break");
-$th.attr("colspan", 5);
+    var $container = $('#container');
 
-const $tbody = $("<tbody></tbody>");
-$table.append($tbody);
+    $container.append($spotsTable);
+
+    getSpots("http://localhost:8000/data");
+
+});
+
 
 const getForecast = (spotId) => {
     $.get(`http://www.spitcast.com/api/spot/forecast/${spotId}/`, function (data) {
@@ -44,34 +53,46 @@ $search.blur(function () {
     getSpots("http://localhost:8000/data?search=" + search);
 });
 
+var renderTable = ($table, data, keys, keyCallback) => {
+
+    const $tbody = $('tbody').first();
+    $tbody.empty();
+
+    data.forEach((datum) => {
+
+        const $tr = $('<tr></tr>');
+        $tbody.append($tr);
+        keys.forEach((key) => {
+
+            const $td = keyCallback(key, datum);
+            if ($td) {
+                $tr.append($td);
+
+            } else {
+                $tr.append(`<td>${datum[key]}</td>`);
+            }
+        });
+
+    });
+
+};
+
+// renderTable($forecastTable, ['date', 'hour', 'shape_detail.swell', 'size']);
+
 function getSpots(url) {
 
     $.get(url, function (data) {
 
-        var renderTableRows = () => {
-            $tbody.empty();
+        renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback = (key, datum) => {
+            if (key == 'spot_id') {
 
-            for (i = 0; i < data.length; i++) {
-                const datum = data[i];
-
-                const $tr = $("<tr></tr>");
-                const $tdSpotId = $("<td></td>");
-                $tbody.append($tr);
-                $tr.append("<td>" + datum.county_name + "</td>");
-                $tr.append("<td>" + datum.latitude + "</td>");
-                $tr.append("<td>" + datum.longitude + "</td>");
-                $tr.append($tdSpotId);
-
-                $tdSpotId.append(`<a onclick="getForecast(${datum.spot_id})" href="#${datum.spot_id}">${datum.spot_id}</a>`);
-
-                $tr.append("<td>" + datum.spot_name + "</td>");
+                const $td = $("<td></td>");
+                $td.append(`<a onclick="getForecast(${datum[key]})" href="#${datum[key]}">${datum[key]}</a>`);
+                return $td;
 
             }
 
-        };
-
-        renderTableRows();
-        console.log(event.target.click);
+        });
 
         let clickState = false;
 
@@ -109,35 +130,35 @@ function getSpots(url) {
 
         $county.click(() => {
             doSort('county_name');
-            renderTableRows();
+            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
             console.log(sortMessage + " by county")
 
         });
 
         $latitude.click(() => {
             doSort('latitude');
-            renderTableRows();
+            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
             console.log(sortMessage + " by latitude")
 
         });
 
         $longitude.click(() => {
             doSort('longitude');
-            renderTableRows();
+            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
             console.log(sortMessage + " by longitude")
 
         });
 
         $spotId.click(() => {
             doSort('spot_id');
-            renderTableRows();
+            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
             console.log(sortMessage + " by spot id")
 
         });
 
         $break.click(() => {
             doSort('spot_name');
-            renderTableRows();
+            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
             console.log(sortMessage + " by break")
 
         });
