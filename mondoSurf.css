@@ -1,29 +1,41 @@
 /* mondoSurf.css */
 
-body {
+body  {
     
-background-color:lightskyblue
-
-}
-table {
-
-width: 100%;
+    background-color:lightskyblue;
     
 }
+#forecast {
+    border: 1px dotted black;
+    width: 50%; 
+}
+#spots {
+    border: 1px solid black;
+}
 
-tbody tr:nth-child(odd) {
-      
-background-color: aqua;
+#spots tbody tr:nth-child(odd) {
+
+    background-color: aqua;
+}
+    
+#spots tbody tr:first-of-type {
+    color: crimson;
+}
+        
+tr {
+    margin: 0px;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
     
 }
 
-tbody tr:first-of-type {
-
-color: crimson;
-
+td {
+    border: none;
 }
 
-button {
-    
-    
+.spotButton {
+
+    border-radius: 6px;
+
 }

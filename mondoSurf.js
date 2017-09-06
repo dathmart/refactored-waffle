@@ -1,47 +1,37 @@
+// Buttons
 let $county = $('#county_name');
 let $latitude = $('#latitude');
 let $longitude = $('#longitude');
 let $spotId = $('#spot_id');
 let $break = $('#spot_name');
 
+// Forecast table
 const $forecastTable = $('<table id="forecast"></table>');
+const $forecastDiv = $('#showForecast');
+const forecastTableHeaders = ['date', 'hour', 'shape_full', 'size_ft'];
+const forecastColumnHeads = ['Date', 'Hour', 'Conditions', 'Swell height (ft)'];
+
+// Spots table
 const $spotsTable = $('<table id="spots"></table>');
+const $container = $('#container');
+const spotsTableHeaders = ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'];
+const spotsColumnHeads = ['County', 'Latitude', 'Longitude', 'Spot ID', 'Break'];
+
 
 $(document).ready(() => {
+    
+    initTable($forecastTable, forecastColumnHeads);
+    $forecastDiv.append($forecastTable);
 
-    $spotsTable.attr("border", 2);
-    const $thead = $("<thead></thead>");
-    $spotsTable.append($thead);
-    const $trHead = $("<tr></tr>");
-    const $th = $("<th></th>");
-    $thead.append($trHead);
-    $trHead.append($th);
-    $th.text("County, Latitude, Longitude, Spot ID, Break");
-    $th.attr("colspan", 5);
-    const $tbody = $('<tbody></tbody>');
-    $spotsTable.append($tbody);
-
-    var $container = $('#container');
-
+    initTable($spotsTable, spotsColumnHeads);
+    
     $container.append($spotsTable);
-
+    
     getSpots("http://localhost:8000/data");
-
+    
 });
 
-
-const getForecast = (spotId) => {
-    $.get(`http://www.spitcast.com/api/spot/forecast/${spotId}/`, function (data) {
-        console.log(data);
-
-    });
-
-}
-
-setTimeout(function () {
-}, 2000);
-
-const $search = $("#search");
+const $search = $('#search');
 $search.focus();
 $search.blur(function () {
     const search = $search.val();
@@ -49,50 +39,104 @@ $search.blur(function () {
         return;
     }
     $tbody.empty();
-
+    
     getSpots("http://localhost:8000/data?search=" + search);
 });
 
-var renderTable = ($table, data, keys, keyCallback) => {
+setTimeout(() => {
+    console.log('these are cool :D');
+}, 2000);
 
-    const $tbody = $('tbody').first();
+function getForecast(spotId) {
+    
+    $.get(`http://www.spitcast.com/api/spot/forecast/${spotId}/`, data => {
+        console.log(data);
+
+        renderTable($forecastTable, data, forecastTableHeaders, keyCallback);
+        
+    });
+};
+
+function initTable ($table, columnHeads) {
+    
+    $table.attr("border", 2);
+    
+    const $thead = renderColumnHeads(columnHeads);
+    
+    $table.append($thead);
+    
+    const $tbody = $('<tbody></tbody>');
+    $table.append($tbody);
+    
+};
+
+// (1) Add dropdown to the page which limits the rows to 5, 10, or 15.
+// As you change the selector it should limit the number of rows accordingly.
+
+
+// (2) Add a dropdown to the page that allows you to select page 1, 2, or 3.
+// As you change that selector, it should skip the right number of rows and take the..
+// ...right number of rows, which is defined by your rows limit selector value.
+
+function renderColumnHeads(columnHeads) {
+    
+    const $thead = $("<thead></thead>");
+    const $trHead = $('<tr></tr>');
+    
+    columnHeads.forEach(head => {
+        
+        const $td = $('<td></td>');
+        $td.append(`<td>${head}</td>`);
+        const $th = $('<th></th>');
+        $th.append($td)
+        $trHead.append($th);
+        
+    });
+
+    $thead.append($trHead);
+    return $thead;
+};
+
+function renderTable($table, data, keys, keyCallback) {
+
+    const $tbody = $($table).find('tbody');
     $tbody.empty();
 
-    data.forEach((datum) => {
+    data.forEach(datum => {
 
         const $tr = $('<tr></tr>');
         $tbody.append($tr);
-        keys.forEach((key) => {
+        keys.forEach(key => {
 
-            const $td = keyCallback(key, datum);
-            if ($td) {
-                $tr.append($td);
+            const $td = $('<td></td>');
+            const el = keyCallback(key, datum);
 
-            } else {
-                $tr.append(`<td>${datum[key]}</td>`);
-            }
+            $td.append(el || `<td>${datum[key]}</td>`);
+            $tr.append($td);
+
+
         });
 
     });
 
 };
 
-// renderTable($forecastTable, ['date', 'hour', 'shape_detail.swell', 'size']);
+
 
 function getSpots(url) {
 
-    $.get(url, function (data) {
+    $.get(url, data => {
 
-        renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback = (key, datum) => {
-            if (key == 'spot_id') {
+        renderTable($spotsTable, data,
+            spotsTableHeaders,
+            keyCallback = (key, datum) => {
+                if (key == 'spot_id') {
 
-                const $td = $("<td></td>");
-                $td.append(`<a onclick="getForecast(${datum[key]})" href="#${datum[key]}">${datum[key]}</a>`);
-                return $td;
+                    return `<a onclick="getForecast(${datum[key]})" href="#${datum[key]}">${datum[key]}</a>`;
 
-            }
+                }
 
-        });
+            });
 
         let clickState = false;
 
@@ -100,65 +144,60 @@ function getSpots(url) {
 
             sortMessage = '';
 
-            if (clickState == false) {
+            if (!clickState) {
                 clickState = true;
                 sortMessage += "ascending";
 
-            } else if (clickState == true) {
+            } else {
                 clickState = false;
                 sortMessage += "descending";
 
             }
 
             data.sort((a, b) => {
+                let comparison = 0;
 
-                if (a[sortProp] === b[sortProp]) {
-                    let comparison = 0;
-                }
                 if (typeof a[sortProp] === typeof b[sortProp]) {
-                    a[sortProp] > b[sortProp] ? comparison = 1 : comparison = -1;
+
+                    comparison = a[sortProp] > b[sortProp] ? 1 : -1;
                 }
 
-                if (clickState == true) {
-                    return comparison;
-                } else {
-                    return comparison * -1;
-                }
+                return clickState ? comparison : comparison * -1;
 
             });
         };
 
         $county.click(() => {
             doSort('county_name');
-            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
+            renderTable($spotsTable, data, spotsTableHeaders, keyCallback);
             console.log(sortMessage + " by county")
 
         });
 
         $latitude.click(() => {
             doSort('latitude');
-            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
+            renderTable($spotsTable, data, spotsTableHeaders, keyCallback);
             console.log(sortMessage + " by latitude")
 
         });
 
         $longitude.click(() => {
             doSort('longitude');
-            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
+            renderTable($spotsTable, data, spotsTableHeaders, keyCallback);
             console.log(sortMessage + " by longitude")
 
         });
 
         $spotId.click(() => {
             doSort('spot_id');
-            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
+            renderTable($spotsTable, data, spotsTableHeaders, keyCallback);
             console.log(sortMessage + " by spot id")
 
         });
 
         $break.click(() => {
             doSort('spot_name');
-            renderTable($spotsTable, data, ['county_name', 'latitude', 'longitude', 'spot_id', 'spot_name'], keyCallback);
+            renderTable($spotsTable, data, spotsTableHeaders, keyCallback);
             console.log(sortMessage + " by break")
 
         });

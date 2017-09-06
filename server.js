@@ -30,7 +30,9 @@ var server = http.createServer(function (req, res) {
   else if (req.url == '/mondoSurf.js') {
     foo('mondoSurf.js');
   }
-
+  else if (req.url == '/mondoSurf.css') {
+    foo('mondoSurf.css');
+  }
   else if (req.url == "/data" || req.url.startsWith('/data?')) {
     res.writeHeader(200, {
       "Content-Type": "application/json",

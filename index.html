@@ -4,39 +4,19 @@
 <head>
   <title>Refactored Waffle!!</title>
   <meta charset="UTF-8">
-  
-  <!-- <link rel="stylesheet" type="text/css" href="mondoSurf.css" /> -->
-  <style type="text/css">
-    body  {
-    
-      background-color:lightskyblue;
-
-    }
-    table {
-      width: 100%;
-    }
-
-    tbody tr:nth-child(odd) {
-      background-color: aqua;
-    }
-
-    tbody tr:first-of-type {
-      color: crimson;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="mondoSurf.css" />
 </head>
 
 <body>
-  <div id="forecast">
-
+  <div id="showForecast">
   </div>
   <div id="container">
     <input type="text" id="search" />
-    <button id="county_name">County</button>
-    <button id="latitude">Latitude</button>
-    <button id="longitude">Longitude</button>
-    <button id="spot_id">Spot ID</button>
-    <button id="spot_name">Break</button>
+    <button class ="spotButton" id="county_name">County</button>
+    <button class ="spotButton" id="latitude">Latitude</button>
+    <button class ="spotButton" id="longitude">Longitude</button>
+    <button class ="spotButton" id="spot_id">Spot ID</button>
+    <button class ="spotButton" id="spot_name">Break</button>
   </div>
 
   <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
