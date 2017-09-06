@@ -140,7 +140,7 @@ function getSpots(url) {
 
         let clickState = false;
 
-        var doSort = (sortProp) => {
+        const doSort = sortProp => {
 
             sortMessage = '';
 
@@ -163,7 +163,6 @@ function getSpots(url) {
                 }
 
                 return clickState ? comparison : comparison * -1;
-
             });
         };
 
