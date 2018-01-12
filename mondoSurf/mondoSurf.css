@@ -1,0 +1,87 @@
+/* mondoSurf.css */
+
+body  {
+    
+    background-color:lightskyblue;
+}
+.main-nav {
+    float: right;
+    border-radius: 4px;
+    margin-top: 8px;
+    border: solid 1px black;
+}
+.main-nav > li {
+    float: left;
+    border-left: solid 1px black;
+    margin-right: 20px;
+}
+.main-nav li {
+    list-style: none;
+}
+.main-nav a {
+    display: block;
+    padding: 5px;
+}
+.dropdown {
+    position: relative;
+}
+.dropdown:after {
+    content: "\25BC";
+    font-size: 0.5em;
+    display: block;
+    position: absolute;
+    top: 35%;
+    right: 5%;
+}
+.drop-nav {
+    position: absolute;
+    display: none;
+}
+.drop-nav li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    float: right;
+}
+.dropdown:hover > .drop-nav {
+    display: block;
+}
+#forecast {
+    border: 1px solid steelblue;
+    width: 50%; 
+}
+#spotsTable tbody tr:first-of-type {
+    color: crimson;
+}
+
+#spotsTable tbody tr:nth-child(odd) {
+
+    background-color: aqua;
+}
+#spotsTable {
+    border: 1px solid black;
+}
+#search {
+    float: left;
+}
+.spotButton {
+    position: relative;
+}
+.page-size {
+    display: inline-block;
+}
+tr {
+    margin: 0px;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    
+}
+
+td {
+    border: none;
+}
+
+.spotButton {
+
+    border-radius: 6px;
+
+}
